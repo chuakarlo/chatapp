@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Chat App</title>
+	<style type="text/css" media="all">
+		* {
+			margin : 0;
+			padding : 0;
+			outline : none;
+			border: none;
+		}
+		input {
+			border: 1px solid #aaa;
+			padding: 10px;
+		}
+		body {
+			font: normal 95%/150% Helvetica;
+			padding : 50px;
+		}
+		.message-box {
+			margin-bottom: 20px;
+		}
+
+	</style>
+	<script src="/socket.io/socket.io.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+	<div id="app">
+		<div class="message-box">
+		</div>
+		<div class="chat-box">
+			<input class="input" type="text">
+			<input class="button" type="submit">
+		</div>
+	</div>
+	<script type="text/javascript" charset="utf-8">
+
+		// ur code goes here
+		var messageBox = document.getElementsByClassName( 'message-box' )[0];
+		var input      = document.getElementsByClassName( 'input' )[0];
+		var button     = document.getElementsByClassName( 'button' )[0];
+
+		var server     = io.connect( 'http://10.0.3.16:3000' );
+
+		server.on( 'message', function ( data ) {
+			var msg       = document.createElement( 'p' );
+			msg.innerText = data.message;
+
+			messageBox.appendChild( msg );
+		} );
+
+		button.onclick = function ( e ) {
+			console.log( input.value );
+			server.emit( 'message', { 'message' : input.value.trim() } );
+			input.value = '';
+			input.focus();
+		};
+
+	</script>
+</body>
+</html>
